@@ -8,7 +8,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-		<title>Travel Project Log In</title>
+		<title>Travel Website Log In</title>
 	</head>
 	
 	<body>
