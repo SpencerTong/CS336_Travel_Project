@@ -17,3 +17,5 @@ CREATE TABLE IF NOT EXISTS FlightAssignedTo(fnumber integer, departure datetime,
 CREATE TABLE IF NOT EXISTS TicketHasFlight(ticketNumber integer, fnumber integer, airlineID char(2), primary key(ticketNumber, fnumber, airlineID), foreign key (ticketNumber) references TicketReserves(ticketNumber), foreign key (fnumber, airlineID) references FlightAssignedTo(fnumber, airlineID));
 
 CREATE TABLE IF NOT EXISTS AssociatedAccount(username varchar(50), password varchar(50), reservationPortfolio varchar(50), CID varchar(20) not null, primary key (username), foreign key (CID) references Customer(CID));
+
+CREATE TABLE IF NOT EXISTS QuestionsAndAnswers(qID int auto_increment primary key, qContent varchar(255), qAnswer varchar(255));
