@@ -14,19 +14,19 @@
     
     <form method="GET">
         <label>Filter by Question Content:</label>
-        <input type="text" name="questionContent">
-        <input type="submit" value="Filter">
+        <input type="text" name="questionContent" maxlength="255">
+        <input type="submit" value="Filter/Show all if blank">
     </form>
     
     <form method="GET">
         <label>Filter by Question Answer:</label>
-        <input type="text" name="questionAnswer">
+        <input type="text" name="questionAnswer" maxlength="255">
         <input type="submit" value="Filter">
     </form>
     
     <form method="POST">
         <label>Add a new question:</label>
-        <input type="text" name="newQuestion" required>
+        <input type="text" name="newQuestion" maxlength="255" required>
         <input type="submit" value="Add Question">
     </form>
     
@@ -61,7 +61,7 @@
                 }
                 
                 if (questionAnswerFilter != null && !questionAnswerFilter.isEmpty()) {
-                	query += " AND qContent LIKE '%" + questionAnswerFilter + "%'";
+                	query += " AND qAnswer LIKE '%" + questionAnswerFilter + "%'";
                 }
 
         		if (newQuestion != null && !newQuestion.isEmpty()){
