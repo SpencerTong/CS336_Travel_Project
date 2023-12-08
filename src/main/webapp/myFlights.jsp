@@ -25,18 +25,59 @@
 
 
 	Statement stmt = con.createStatement();
-	String query = "SELECT * " +
+	String query = "SELECT DISTINCT TicketHasFlight.ticketNumber, FlightAssignedTo.fnumber, departure, arrival " +
 					"FROM TicketReserves " +
 					"INNER JOIN TicketHasFlight " +
 					"ON TicketReserves.ticketNumber = TicketHasFlight.ticketNumber " +
 					"INNER JOIN FlightAssignedTo " +
 					"ON TicketHasFlight.fnumber = FlightAssignedTo.fnumber and TicketHasFlight.airlineID = FlightAssignedTo.airlineID " +
+					"INNER JOIN Aircraft " +
 					"WHERE TicketReserves.CID = " + userCID; 
 	if (request.getParameter("displayPastFlights") != null) {
     	query += " AND FlightAssignedTo.departure < CURDATE();";
 	} else if (request.getParameter("displayUpcomingFlights") != null) {
 	    query += " AND FlightAssignedTo.departure > CURDATE();";
-	} 
+	} else if (request.getParameter("cancelReservation") != null) {
+    	String deleteInfoQuery = "SELECT * FROM TicketReserves INNER JOIN TicketHasFlight ON TicketReserves.ticketNumber = TicketHasFlight.ticketNumber WHERE TicketReserves.ticketNumber = (?);";
+        String ticketNumber = request.getParameter("ticketNumber");
+        PreparedStatement pstmt = con.prepareStatement(deleteInfoQuery);
+
+        pstmt.setString(1, ticketNumber);
+        ResultSet rs2 = pstmt.executeQuery();
+    	
+        while (rs2.next()){
+         	String fnumber = rs2.getString("fnumber");
+        	pstmt = con.prepareStatement("SELECT waitlist FROM FlightAssignedTo WHERE fnumber = '" + fnumber + "';");
+        	ResultSet rs3 = pstmt.executeQuery();
+        	while (rs3.next()){
+        		if (rs3.getString("waitlist")!=null){
+        			String[] customersToNotify = rs3.getString("waitlist").split(":");
+            		for (String cid : customersToNotify){
+            			if(cid!=""){
+            				pstmt = con.prepareStatement("SELECT notifications from Customer WHERE CID = '" + cid + "';");
+                        	ResultSet rs4 = pstmt.executeQuery();
+                        	while (rs4.next()){
+                        		String notifications = rs4.getString("notifications");
+                            	notifications += ":Spot opened up for flight " + fnumber + " which you were on the waitlist for!";
+                            	pstmt = con.prepareStatement("UPDATE Customer SET notifications = '" + notifications + "' WHERE CID = '" + cid + "';");
+        						pstmt.executeUpdate();
+                        	}
+            			}
+            		}
+        		}
+        		
+        	}
+        	rs3.close();
+        }
+        
+        rs2.close();
+        
+        
+        pstmt = con.prepareStatement("DELETE FROM TicketReserves WHERE ticketNumber = (?)");
+        pstmt.setString(1, ticketNumber);
+		pstmt.executeUpdate();
+		pstmt.close();
+    }
 	
     ResultSet rs = stmt.executeQuery(query);
 
@@ -53,7 +94,7 @@
         out.println("<td>");
         out.println("<form method='POST'>");
         out.println("<input type='hidden' name='ticketNumber' value='" + rs.getString("ticketNumber") + "'>");
-        out.println("<input type='submit' value='Cancel Reservation'>");
+        out.println("<input type='submit' name='cancelReservation' value='Cancel Reservation'>");
         out.println("</form>");
         out.println("</td>");
         // Add other columns as needed
@@ -62,11 +103,8 @@
 
     out.println("</table>");
     
-    String deleteQuery = "DELETE FROM TicketReserves WHERE ticketNumber = ?";
-    String ticketNumber = request.getParameter("ticketNumber");
-    PreparedStatement pstmt = con.prepareStatement(deleteQuery);
-    pstmt.setString(1, ticketNumber);
-    int rowsDeleted = pstmt.executeUpdate();
+    
+    
     rs.close();
     stmt.close();
     con.close();

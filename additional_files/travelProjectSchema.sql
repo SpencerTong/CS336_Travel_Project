@@ -1,4 +1,14 @@
 USE travelProject;
+--DROP TABLE AssociatedWith;
+--DROP TABLE TicketHasFlight;
+--DROP TABLE FlightAssignedTo;
+--DROP TABLE Aircraft;
+--DROP TABLE TicketReserves;
+--DROP TABLE AssociatedAccount;
+--DROP TABLE QuestionsAndAnswers;
+--DROP TABLE AirlineCompany;
+--DROP TABLE Airport;
+--DROP TABLE Customer;
 
 CREATE TABLE IF NOT EXISTS AirlineCompany(airlineID char(2) primary key);
 
@@ -20,18 +30,13 @@ CREATE TABLE IF NOT EXISTS AssociatedAccount(username varchar(50), password varc
 
 CREATE TABLE IF NOT EXISTS QuestionsAndAnswers(qID int auto_increment primary key, qContent varchar(255), qAnswer varchar(255));
 
-
---test data
---
---
---
 --INSERT INTO AirlineCompany values ('AB'), ('CD'), ('EF');
 --INSERT INTO Airport values ('JFK'), ('NJA');
 --INSERT INTO Customer values ('Timmy', 'Chen', 'txc', ''), ('Spencer', 'Tong', 'sxt', ''), ('Dany', 'Chucri', 'dxc', ''), ('Alex', 'Walcsak', 'asw', '');
---INSERT INTO TicketReserves values (1, 1, 20.0, 40.0, '2023-12-31','12:30:00', 'sxt', 0), (2, 2, 30.0, 50.0, '2020-11-29','10:25:21', 'asw', 20);
+--INSERT INTO TicketReserves values (3, 2, 33.0, 70.0, '2025-03-04','10:25:21', 'sxt', 20) , (1, 1, 20.0, 40.0, '2023-12-31','12:30:00', 'sxt', 0), (2, 2, 30.0, 50.0, '2020-11-29','10:25:21', 'asw', 20);
 --INSERT INTO AssociatedWith values('JFK', 'AB'), ('NJA','CD');
 --INSERT INTO Aircraft values ('aircraft1', 'operate1', 10, 'AB'), ('aircraft2', 'operate2', 95, 'AB');
---INSERT INTO FlightAssignedTo values (123, '2024-01-20', '2024-02-01', 'JFK', 'NJA', 'w', 'AB', 'aircraft1', ''), (456, '2020-02-20', '2020-02-20', 'NJA', 'JFK', 'r', 'CD', 'aircraft2', '');
+--INSERT INTO FlightAssignedTo values (123, '2024-01-20', '2024-02-01', 'JFK', 'NJA', 'w', 'AB', 'aircraft1', 'txc:'), (456, '2020-02-20', '2020-02-20', 'NJA', 'JFK', 'r', 'CD', 'aircraft2','dxc:');
 --INSERT INTO TicketHasFlight values (1, 123, 'AB'), (2, 456, 'CD');
 --INSERT INTO AssociatedAccount values ('timmyMen', 'password1', 'portfolio1', 'txc'), ('danychurro', 'password2', 'portfolio2', 'dxc');
 --INSERT INTO QuestionsAndAnswers values (100, 'content', 'answer!');
