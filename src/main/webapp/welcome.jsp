@@ -52,7 +52,7 @@
 	    		%>
 	    	</select>
 	    	<label for="arrivalAirport">Arrival Airport:</label>
-	    	<select id="arrivalAirport" name="departureAirport">
+	    	<select id="arrivalAirport" name="arrivalAirport">
 	    		<%
 	    		try {
 	    			ApplicationDB db = new ApplicationDB();
@@ -304,16 +304,13 @@
     			String query= "SELECT fnumber, fromAirport, toAirport, departure, arrival, returnDeparture, returnArrival, travelType, numStops, basicPrice, premiumPrice, bookingFee FROM FlightAssignedTo";
     			// airport filter
     			query += " WHERE fromAirport='" + departureAirport + "' AND toAirport='" +arrivalAirport +"'";
-    			out.println(query);
+     			out.println(query);
     			//One way/Round trip filter
-    			if (oneWay != null && roundTrip == null) {
+    			 if (oneWay != null && roundTrip == null) {
     				query+= "AND travelType='o'";
     			} else if (oneWay == null && roundTrip != null) {
     				query+= "AND travelType='r'";
-    			} else if (oneWay == null && roundTrip == null) {
-    				//will return nothing
-    				query+= "AND travelType='o' AND travelType='r'";
-    			}
+    			} 
     			ResultSet rs = stmt.executeQuery(query);
     			
     			 while (rs.next()) {
