@@ -10,6 +10,10 @@
 <title>My Flights</title>
 </head>
 <body>
+<form method="GET">
+	<input type="submit" name="backToHome" value="Back To Home Page">
+</form>
+
 <h1>Display Flights</h1>
 
 <form method="GET">
@@ -19,9 +23,10 @@
 </form>
 <%
 	try {
+	HttpSession ses = request.getSession();
 	ApplicationDB db = new ApplicationDB();	
 	Connection con = db.getConnection();
-	String userCID = /* request.getParameter("CID"); */ "'sxt'";
+	String userCID = (String) ses.getAttribute("CID");
 
 
 	Statement stmt = con.createStatement();
@@ -33,7 +38,9 @@
 					"ON TicketHasFlight.fnumber = FlightAssignedTo.fnumber and TicketHasFlight.airlineID = FlightAssignedTo.airlineID " +
 					"INNER JOIN Aircraft " +
 					"WHERE TicketReserves.CID = " + userCID; 
-	if (request.getParameter("displayPastFlights") != null) {
+	if(request.getParameter("backToHome")!=null){
+		response.sendRedirect("welcome.jsp");
+	} else if (request.getParameter("displayPastFlights") != null) {
     	query += " AND FlightAssignedTo.departure < CURDATE();";
 	} else if (request.getParameter("displayUpcomingFlights") != null) {
 	    query += " AND FlightAssignedTo.departure > CURDATE();";
