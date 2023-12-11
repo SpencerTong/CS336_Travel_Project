@@ -44,12 +44,17 @@
 				%>
 					<h4><%= notification %></h4>
 				<%
-				String allFlightsQuery = "SELECT fnumber, waitlist FROM FlightAssignedTo";
-				ResultSet flightsRs = stmt.executeQuery(allFlightsQuery);
+				String[] individualNotifs = notification.split(":");
 				
-				while (flightsRs.next()) {
+				for (String s : individualNotifs) {
+					int startIndex = s.indexOf("[");
+					int endIndex = s.indexOf("]");
+					int flightNum = Integer.parseInt(s.substring(startIndex+1, endIndex));
+					
+					String flightQuery = "SELECT waitlist FROM FlightAssignedTo WHERE fnumber=" + flightNum;
+					ResultSet flightsRs = stmt.executeQuery(flightQuery);
+					
 					String waitlist = flightsRs.getString("waitlist");
-					int fnumber = flightsRs.getInt("fnumber");
 					waitlist = waitlist.replace(cid, "");
 					waitlist = waitlist.replace("::", ":");
 					if (waitlist.equals(":")) {
@@ -57,16 +62,18 @@
 					}
 					
 					Statement updateStatement = con.createStatement();
-					String updateFlightWaitList = "UPDATE FlightAssignedTo SET waitlist='" + waitlist + "' WHERE fnumber=" + fnumber;
+					String updateFlightWaitList = "UPDATE FlightAssignedTo SET waitlist='" + waitlist + "' WHERE fnumber=" + flightNum;
 					updateStatement.executeUpdate(updateFlightWaitList);
+					
+					flightsRs.close();
 					updateStatement.close();
+					
 				}
+			
 				
 				String clearCustomerNotifications = "UPDATE Customer SET notifications='' WHERE cid='" + cid + "'";
 				stmt.executeUpdate(clearCustomerNotifications);
 				
-				flightsRs.close();
-
 			}
 		}
 		
