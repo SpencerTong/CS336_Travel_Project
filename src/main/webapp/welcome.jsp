@@ -25,7 +25,59 @@
     	<input type="submit" value="My Flights">
     </form>
     
+  
+    
     <h3>Search Flights</h3>
+    
+     <%
+    try {
+		ApplicationDB db = new ApplicationDB();
+		Connection con = db.getConnection();
+		
+		Statement stmt = con.createStatement();
+		ResultSet rs = stmt.executeQuery("SELECT notifications FROM Customer WHERE cid='" + cid + "'"); 
+		
+		
+		if (rs.next()) {
+			String notification = rs.getString("notifications");
+			if (!notification.isEmpty()) {
+				%>
+					<h4><%= notification %></h4>
+				<%
+			}
+		}
+		
+
+		String allFlightsQuery = "SELECT fnumber, waitlist FROM FlightAssignedTo";
+		ResultSet flightsRs = stmt.executeQuery(allFlightsQuery);
+		
+		while (flightsRs.next()) {
+			String waitlist = flightsRs.getString("waitlist");
+			int fnumber = flightsRs.getInt("fnumber");
+			waitlist = waitlist.replace(cid, "");
+			waitlist = waitlist.replace("::", ":");
+			if (waitlist.equals(":")) {
+				waitlist = "";
+			}
+			
+			Statement updateStatement = con.createStatement();
+			String updateFlightWaitList = "UPDATE FlightAssignedTo SET waitlist='" + waitlist + "' WHERE fnumber=" + fnumber;
+			updateStatement.executeUpdate(updateFlightWaitList);
+			updateStatement.close();
+		}
+		
+		String clearCustomerNotifications = "UPDATE Customer SET notifications='' WHERE cid='" + cid + "'";
+		stmt.executeUpdate(clearCustomerNotifications);
+		
+		flightsRs.close();
+		rs.close();
+		stmt.close();
+		con.close();
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+	%>
     
     <form method="get">
     	<fieldset style="border: none;">
@@ -689,7 +741,6 @@
     	                </tr>
     	    <%
     	            }
-
     	            rs.close();
     	            stmt.close();
     	            con.close();
