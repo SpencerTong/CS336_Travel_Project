@@ -65,7 +65,7 @@
                         	ResultSet rs4 = pstmt.executeQuery();
                         	while (rs4.next()){
                         		String notifications = rs4.getString("notifications");
-                            	notifications += "Spot opened up for flight *" + fnumber + "* which you were on the waitlist for! :";
+                            	notifications += "Spot opened up for flight [" + fnumber + "] which you were on the waitlist for! :";
                             	pstmt = con.prepareStatement("UPDATE Customer SET notifications = '" + notifications + "' WHERE CID = '" + cid + "';");
         						pstmt.executeUpdate();
                         	}
