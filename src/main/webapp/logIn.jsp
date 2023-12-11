@@ -23,8 +23,9 @@
 	<br>
 	
 	<% HttpSession ses = request.getSession();
+		ses.setAttribute("CID", "");
 		String errorMessage = (String) ses.getAttribute("logInError");
-       if (errorMessage != null) { %>
+        if (errorMessage != null) { %>
         <p style="color: red;"><%= errorMessage %></p>
     <% } %>
 
