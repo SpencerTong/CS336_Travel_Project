@@ -44,32 +44,33 @@
 				%>
 					<h4><%= notification %></h4>
 				<%
-			}
-		}
-		
+				String allFlightsQuery = "SELECT fnumber, waitlist FROM FlightAssignedTo";
+				ResultSet flightsRs = stmt.executeQuery(allFlightsQuery);
+				
+				while (flightsRs.next()) {
+					String waitlist = flightsRs.getString("waitlist");
+					int fnumber = flightsRs.getInt("fnumber");
+					waitlist = waitlist.replace(cid, "");
+					waitlist = waitlist.replace("::", ":");
+					if (waitlist.equals(":")) {
+						waitlist = "";
+					}
+					
+					Statement updateStatement = con.createStatement();
+					String updateFlightWaitList = "UPDATE FlightAssignedTo SET waitlist='" + waitlist + "' WHERE fnumber=" + fnumber;
+					updateStatement.executeUpdate(updateFlightWaitList);
+					updateStatement.close();
+				}
+				
+				String clearCustomerNotifications = "UPDATE Customer SET notifications='' WHERE cid='" + cid + "'";
+				stmt.executeUpdate(clearCustomerNotifications);
+				
+				flightsRs.close();
 
-		String allFlightsQuery = "SELECT fnumber, waitlist FROM FlightAssignedTo";
-		ResultSet flightsRs = stmt.executeQuery(allFlightsQuery);
-		
-		while (flightsRs.next()) {
-			String waitlist = flightsRs.getString("waitlist");
-			int fnumber = flightsRs.getInt("fnumber");
-			waitlist = waitlist.replace(cid, "");
-			waitlist = waitlist.replace("::", ":");
-			if (waitlist.equals(":")) {
-				waitlist = "";
 			}
-			
-			Statement updateStatement = con.createStatement();
-			String updateFlightWaitList = "UPDATE FlightAssignedTo SET waitlist='" + waitlist + "' WHERE fnumber=" + fnumber;
-			updateStatement.executeUpdate(updateFlightWaitList);
-			updateStatement.close();
 		}
 		
-		String clearCustomerNotifications = "UPDATE Customer SET notifications='' WHERE cid='" + cid + "'";
-		stmt.executeUpdate(clearCustomerNotifications);
 		
-		flightsRs.close();
 		rs.close();
 		stmt.close();
 		con.close();
@@ -639,7 +640,48 @@
 
     			        if (aircraftRes.next()) {
     			            int seats = aircraftRes.getInt("seats");
+    			            
+    			          //check for if full
+        			        String waitlistQuery = "SELECT COUNT(*) AS TotalReservations FROM TicketHasFlight WHERE fnumber = '"+bookedFlightNum+"'";
+        			        ResultSet rs = stmt.executeQuery(waitlistQuery);
+        			        int currentReservations = 0;
+        			        
+        			        if (rs.next()){
+        			        	currentReservations = rs.getInt("TotalReservations");
+        			        }
+        			        
+        			        if (currentReservations>=seats){
+        			        	//add to waitlist
+        			        	String newWaitlist = "";
+        			        	String originalWaitlist ="";
+        			        	String getCurrentWaitlistQuery = "SELECT waitlist FROM FlightAssignedTo WHERE fnumber = '"+bookedFlightNum+"'";
+        			        	ResultSet waitlistRes = stmt.executeQuery(getCurrentWaitlistQuery);
+        			        	if (waitlistRes.next()){
+        			        		originalWaitlist = waitlistRes.getString("waitlist");
+        			        		newWaitlist = originalWaitlist+":"+cid;
+        			        	}
+        			        	String[] cids =originalWaitlist.split(":");
+        			        	boolean alrExists = false;
+        			        	for (String s : cids){
+        			        		if (s.equals(cid)){
+        			        			alrExists = true;
+        			        			break;
+        			        		}
+        			        		
+        			        	}
+        			        	if (!alrExists){
+        			        		String updateWaitlistQuery = "UPDATE FlightAssignedTo SET waitlist = '" + newWaitlist + "' WHERE fnumber = '"+bookedFlightNum+"'";
+            			        	stmt.executeUpdate(updateWaitlistQuery);
+            			            out.println("<h4 style='color: red';>Flight is full, you've been added to the waitlist</h4>");
+        			        	} else{
+            			            out.println("<h4 style='color: purple';>Flight is full, you're already on the wailist</h4>");
 
+        			        	}
+        			        	
+        			        
+        			        	
+        			        } else {
+							
     			            // Use parentheses to ensure correct order of operations
     			            int seatNum = (int) (Math.random() * seats) + 1;
 
@@ -657,7 +699,8 @@
     			            } else {
     			            	out.println("TicketNum not found");
     			            }    			            
-    			        } else {
+    			        } 
+    			        }else {
     			            out.println("Aircraft information not found.");
     			        }
     			    } else {
