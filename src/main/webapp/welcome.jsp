@@ -500,7 +500,6 @@
     			            int seatNum = (int) (Math.random() * seats) + 1;
 
     			            String ticketReservesInsert = "INSERT INTO TicketReserves(seat_number, bookingFee, totalFare, dateAndTimePurchased, CID, cancellationFee) VALUES (" + seatNum + ", " + bookingFee + ", " + basicPrice + ", '" + formattedDateTime + "', '" + cid + "', 20)";
-    			            out.println(ticketReservesInsert);
     			            stmt.executeUpdate(ticketReservesInsert);
     			            
     			            String ticketReservesQuery = "SELECT MAX(ticketNumber) FROM (SELECT ticketNumber FROM TicketReserves) AS ticketNums";
@@ -510,6 +509,7 @@
     			            	String ticketNum = ticketReservesResult.getString("MAX(ticketNumber)");
         			            String TicketHasFlightInsert = "INSERT INTO TicketHasFlight VALUES (" + ticketNum + ", " + bookedFlightNum + ", '" + airlineID + "')";
         			            stmt.executeUpdate(TicketHasFlightInsert);
+        			            out.println("<h4 style='color: green';>Ticket purchased!</h4>");
     			            } else {
     			            	out.println("TicketNum not found");
     			            }    			            
@@ -544,7 +544,6 @@
     			            int seatNum = (int) (Math.random() * seats) + 1;
 
     			            String ticketReservesInsert = "INSERT INTO TicketReserves(seat_number, bookingFee, totalFare, dateAndTimePurchased, CID, cancellationFee) VALUES (" + seatNum + ", " + bookingFee + ", " + basicPrice + ", '" + formattedDateTime + "', '" + cid + "', 0)";
-    			            out.println(ticketReservesInsert);
     			            stmt.executeUpdate(ticketReservesInsert);
     			            
     			            String ticketReservesQuery = "SELECT MAX(ticketNumber) FROM (SELECT ticketNumber FROM TicketReserves) AS ticketNums";
@@ -554,6 +553,7 @@
     			            	String ticketNum = ticketReservesResult.getString("MAX(ticketNumber)");
         			            String TicketHasFlightInsert = "INSERT INTO TicketHasFlight VALUES (" + ticketNum + ", " + bookedFlightNum + ", '" + airlineID + "')";
         			            stmt.executeUpdate(TicketHasFlightInsert);
+        			            out.println("<h4 style='color: green';>Ticket purchased!</h4>");
     			            } else {
     			            	out.println("TicketNum not found");
     			            }    			            
@@ -639,7 +639,6 @@
     				 query += " ORDER BY " + sortCriteria;
     			 }
     			 
-    			out.println(query);
     			ResultSet rs = stmt.executeQuery(query);
     			
     			 while (rs.next()) {
