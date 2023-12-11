@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1" import="com.cs336.pkg.*"%>
-<%@ page import="java.io.*,java.util.*,java.sql.*"%>
+<%@ page import="java.io.*,java.util.*,java.sql.*,java.time.LocalDateTime,java.time.format.DateTimeFormatter"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -12,6 +12,7 @@
 <body>
 	<% HttpSession ses = request.getSession();
 		String username = (String) ses.getAttribute("username");
+		String cid = (String) ses.getAttribute("CID");
        if (username != null) { %>
         <h2 >Welcome, <%= username %></h2>
     <% } %>
@@ -467,12 +468,103 @@
 			
 			String basicTicket = request.getParameter("basicTicket");
 			String premiumTicket = request.getParameter("premiumTicket");
+			String bookedFlightNum = request.getParameter("fnumber");
+			
 			
 			try {
 				ApplicationDB db = new ApplicationDB();
     			Connection con = db.getConnection();
     			
     			Statement stmt = con.createStatement();
+    			
+    			if (basicTicket != null) {
+    				LocalDateTime currentDateTime = LocalDateTime.now();
+    				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    				String formattedDateTime = currentDateTime.format(formatter);
+    				
+    				String flightQuery = "SELECT bookingFee, basicPrice, aircraftID, airlineID FROM FlightAssignedTo WHERE fnumber='" + bookedFlightNum +"'";
+    				ResultSet result = stmt.executeQuery(flightQuery);
+    				if (result.next()) {
+    			        Float bookingFee = result.getFloat("bookingFee");
+    			        Float basicPrice = result.getFloat("basicPrice");
+    			        String aircraftID = result.getString("aircraftID");
+    			        String airlineID = result.getString("airlineID");
+
+    			        String aircraftQuery = "SELECT seats FROM Aircraft WHERE aircraftID='" + aircraftID + "'";
+    			        ResultSet aircraftRes = stmt.executeQuery(aircraftQuery);
+
+    			        if (aircraftRes.next()) {
+    			            int seats = aircraftRes.getInt("seats");
+
+    			            // Use parentheses to ensure correct order of operations
+    			            int seatNum = (int) (Math.random() * seats) + 1;
+
+    			            String ticketReservesInsert = "INSERT INTO TicketReserves(seat_number, bookingFee, totalFare, dateAndTimePurchased, CID, cancellationFee) VALUES (" + seatNum + ", " + bookingFee + ", " + basicPrice + ", '" + formattedDateTime + "', '" + cid + "', 20)";
+    			            out.println(ticketReservesInsert);
+    			            stmt.executeUpdate(ticketReservesInsert);
+    			            
+    			            String ticketReservesQuery = "SELECT MAX(ticketNumber) FROM (SELECT ticketNumber FROM TicketReserves) AS ticketNums";
+    			            ResultSet ticketReservesResult = stmt.executeQuery(ticketReservesQuery);
+    			            
+    			            if (ticketReservesResult.next()) {
+    			            	String ticketNum = ticketReservesResult.getString("MAX(ticketNumber)");
+        			            String TicketHasFlightInsert = "INSERT INTO TicketHasFlight VALUES (" + ticketNum + ", " + bookedFlightNum + ", '" + airlineID + "')";
+        			            stmt.executeUpdate(TicketHasFlightInsert);
+    			            } else {
+    			            	out.println("TicketNum not found");
+    			            }    			            
+    			        } else {
+    			            out.println("Aircraft information not found.");
+    			        }
+    			    } else {
+    			        out.println("Flight information not found.");
+    			    }
+    			}
+    			
+    			if (premiumTicket != null) {
+    				LocalDateTime currentDateTime = LocalDateTime.now();
+    				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    				String formattedDateTime = currentDateTime.format(formatter);
+    				
+    				String flightQuery = "SELECT bookingFee, premiumPrice, aircraftID, airlineID FROM FlightAssignedTo WHERE fnumber='" + bookedFlightNum +"'";
+    				ResultSet result = stmt.executeQuery(flightQuery);
+    				if (result.next()) {
+    			        Float bookingFee = result.getFloat("bookingFee");
+    			        Float basicPrice = result.getFloat("premiumPrice");
+    			        String aircraftID = result.getString("aircraftID");
+    			        String airlineID = result.getString("airlineID");
+
+    			        String aircraftQuery = "SELECT seats FROM Aircraft WHERE aircraftID='" + aircraftID + "'";
+    			        ResultSet aircraftRes = stmt.executeQuery(aircraftQuery);
+
+    			        if (aircraftRes.next()) {
+    			            int seats = aircraftRes.getInt("seats");
+
+    			            // Use parentheses to ensure correct order of operations
+    			            int seatNum = (int) (Math.random() * seats) + 1;
+
+    			            String ticketReservesInsert = "INSERT INTO TicketReserves(seat_number, bookingFee, totalFare, dateAndTimePurchased, CID, cancellationFee) VALUES (" + seatNum + ", " + bookingFee + ", " + basicPrice + ", '" + formattedDateTime + "', '" + cid + "', 0)";
+    			            out.println(ticketReservesInsert);
+    			            stmt.executeUpdate(ticketReservesInsert);
+    			            
+    			            String ticketReservesQuery = "SELECT MAX(ticketNumber) FROM (SELECT ticketNumber FROM TicketReserves) AS ticketNums";
+    			            ResultSet ticketReservesResult = stmt.executeQuery(ticketReservesQuery);
+    			            
+    			            if (ticketReservesResult.next()) {
+    			            	String ticketNum = ticketReservesResult.getString("MAX(ticketNumber)");
+        			            String TicketHasFlightInsert = "INSERT INTO TicketHasFlight VALUES (" + ticketNum + ", " + bookedFlightNum + ", '" + airlineID + "')";
+        			            stmt.executeUpdate(TicketHasFlightInsert);
+    			            } else {
+    			            	out.println("TicketNum not found");
+    			            }    			            
+    			        } else {
+    			            out.println("Aircraft information not found.");
+    			        }
+    			    } else {
+    			        out.println("Flight information not found.");
+    			    }
+    			}
+    			
     			String query= "SELECT fnumber, fromAirport, toAirport, airlineID, departure, arrival, returnDeparture, returnArrival, travelType, numStops, basicPrice, premiumPrice, bookingFee, TIMESTAMPDIFF(HOUR, departure, arrival)+COALESCE(TIMESTAMPDIFF(hour, returnDeparture, returnArrival), 0) as duration FROM FlightAssignedTo WHERE 1=1";
     			// airport filter
     			if (departureAirport != null && !departureAirport.equals("Any")) {
