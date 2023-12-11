@@ -545,30 +545,74 @@
     			        Float basicPrice = result.getFloat("basicPrice");
     			        String aircraftID = result.getString("aircraftID");
     			        String airlineID = result.getString("airlineID");
-
+    			        		
     			        String aircraftQuery = "SELECT seats FROM Aircraft WHERE aircraftID='" + aircraftID + "'";
     			        ResultSet aircraftRes = stmt.executeQuery(aircraftQuery);
 
     			        if (aircraftRes.next()) {
     			            int seats = aircraftRes.getInt("seats");
-
-    			            // Use parentheses to ensure correct order of operations
-    			            int seatNum = (int) (Math.random() * seats) + 1;
-
-    			            String ticketReservesInsert = "INSERT INTO TicketReserves(seat_number, bookingFee, totalFare, dateAndTimePurchased, CID, cancellationFee) VALUES (" + seatNum + ", " + bookingFee + ", " + basicPrice + ", '" + formattedDateTime + "', '" + cid + "', 20)";
-    			            stmt.executeUpdate(ticketReservesInsert);
     			            
-    			            String ticketReservesQuery = "SELECT MAX(ticketNumber) FROM (SELECT ticketNumber FROM TicketReserves) AS ticketNums";
-    			            ResultSet ticketReservesResult = stmt.executeQuery(ticketReservesQuery);
-    			            
-    			            if (ticketReservesResult.next()) {
-    			            	String ticketNum = ticketReservesResult.getString("MAX(ticketNumber)");
-        			            String TicketHasFlightInsert = "INSERT INTO TicketHasFlight VALUES (" + ticketNum + ", " + bookedFlightNum + ", '" + airlineID + "')";
-        			            stmt.executeUpdate(TicketHasFlightInsert);
-        			            out.println("<h4 style='color: green';>Ticket purchased!</h4>");
-    			            } else {
-    			            	out.println("TicketNum not found");
-    			            }    			            
+        			        //check for if full
+        			        String waitlistQuery = "SELECT COUNT(*) AS TotalReservations FROM TicketHasFlight WHERE fnumber = '"+bookedFlightNum+"'";
+        			        ResultSet rs = stmt.executeQuery(waitlistQuery);
+        			        int currentReservations = 0;
+        			        
+        			        if (rs.next()){
+        			        	currentReservations = rs.getInt("TotalReservations");
+        			        }
+        			        
+        			        if (currentReservations>=seats){
+        			        	//add to waitlist
+        			        	String newWaitlist = "";
+        			        	String originalWaitlist ="";
+        			        	String getCurrentWaitlistQuery = "SELECT waitlist FROM FlightAssignedTo WHERE fnumber = '"+bookedFlightNum+"'";
+        			        	ResultSet waitlistRes = stmt.executeQuery(getCurrentWaitlistQuery);
+        			        	if (waitlistRes.next()){
+        			        		originalWaitlist = waitlistRes.getString("waitlist");
+        			        		newWaitlist = originalWaitlist+":"+cid;
+        			        	}
+        			        	String[] cids =originalWaitlist.split(":");
+        			        	boolean alrExists = false;
+        			        	for (String s : cids){
+        			        		if (s.equals(cid)){
+        			        			alrExists = true;
+        			        			break;
+        			        		}
+        			        		
+        			        	}
+        			        	if (!alrExists){
+        			        		String updateWaitlistQuery = "UPDATE FlightAssignedTo SET waitlist = '" + newWaitlist + "' WHERE fnumber = '"+bookedFlightNum+"'";
+            			        	stmt.executeUpdate(updateWaitlistQuery);
+            			            out.println("<h4 style='color: red';>Flight is full, you've been added to the waitlist</h4>");
+        			        	} else{
+            			            out.println("<h4 style='color: purple';>Flight is full, you're already on the wailist</h4>");
+
+        			        	}
+        			        	
+        			        
+        			        	
+        			        } else {
+        			            // Use parentheses to ensure correct order of operations
+        			            int seatNum = (int) (Math.random() * seats) + 1;
+
+        			            String ticketReservesInsert = "INSERT INTO TicketReserves(seat_number, bookingFee, totalFare, dateAndTimePurchased, CID, cancellationFee) VALUES (" + seatNum + ", " + bookingFee + ", " + basicPrice + ", '" + formattedDateTime + "', '" + cid + "', 20)";
+        			            stmt.executeUpdate(ticketReservesInsert);
+        			            
+        			            String ticketReservesQuery = "SELECT MAX(ticketNumber) FROM (SELECT ticketNumber FROM TicketReserves) AS ticketNums";
+        			            ResultSet ticketReservesResult = stmt.executeQuery(ticketReservesQuery);
+        			            
+        			            if (ticketReservesResult.next()) {
+        			            	String ticketNum = ticketReservesResult.getString("MAX(ticketNumber)");
+            			            String TicketHasFlightInsert = "INSERT INTO TicketHasFlight VALUES (" + ticketNum + ", " + bookedFlightNum + ", '" + airlineID + "')";
+            			            stmt.executeUpdate(TicketHasFlightInsert);
+            			            out.println("<h4 style='color: green';>Ticket purchased!</h4>");
+        			            } else {
+        			            	out.println("TicketNum not found");
+        			            }    
+        			        }
+        			        
+        			        //
+        			        			            
     			        } else {
     			            out.println("Aircraft information not found.");
     			        }
