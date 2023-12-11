@@ -26,7 +26,7 @@
 	HttpSession ses = request.getSession();
 	ApplicationDB db = new ApplicationDB();	
 	Connection con = db.getConnection();
-	String userCID = (String) ses.getAttribute("CID");
+ 	String userCID = (String) ses.getAttribute("CID");
 
 
 	Statement stmt = con.createStatement();
@@ -37,7 +37,7 @@
 					"INNER JOIN FlightAssignedTo " +
 					"ON TicketHasFlight.fnumber = FlightAssignedTo.fnumber and TicketHasFlight.airlineID = FlightAssignedTo.airlineID " +
 					"INNER JOIN Aircraft " +
-					"WHERE TicketReserves.CID = " + userCID; 
+					"WHERE TicketReserves.CID = '" + userCID + "'"; 
 	if(request.getParameter("backToHome")!=null){
 		response.sendRedirect("welcome.jsp");
 	} else if (request.getParameter("displayPastFlights") != null) {

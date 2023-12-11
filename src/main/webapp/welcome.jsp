@@ -21,6 +21,10 @@
     	<input type="submit" value="Log Out">
     </form>
     
+    <form method="get" action="myFlights.jsp">
+    	<input type="submit" value="My Flights">
+    </form>
+    
     <h3>Search Flights</h3>
     
     <form method="get">
