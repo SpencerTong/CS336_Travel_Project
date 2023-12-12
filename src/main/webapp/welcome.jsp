@@ -408,8 +408,9 @@
     	    Number of Stops Under (inclusive):<br>
     		<select id="stopsLimit" name="stopsLimit">
     			<option value="0">0</option>
-    			<option value="2">0</option>
-    			<option value="3">0</option>
+    			<option value="1">1</option>
+    			<option value="2">2</option>
+    			<option value="3">3</option>
     			<option value="Any" selected>Any</option>
     		</select>
     	</fieldset>
