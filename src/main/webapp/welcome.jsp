@@ -395,7 +395,7 @@
     		</select>
     	</fieldset>
     	<fieldset style="border: none;">
-    	    Premium and Basic Price With Booking Fee Under (inclusive):<br>
+    	    Price With Booking Fee Under (inclusive) (basic AND premium):<br>
     		<select id="priceLimit" name="priceLimit">
     			<option value="500">$500</option>
     			<option value="1000">$1000</option>
