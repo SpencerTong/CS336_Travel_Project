@@ -45,4 +45,4 @@ INSERT INTO FlightAssignedTo values (123, '2024-01-20', '2024-02-01', null, null
 
 -- INSERT INTO TicketHasFlight values (1, 123, 'AB'), (2, 456, 'CD');
 INSERT INTO AssociatedAccount values ('timmyMen', 'password1', 'portfolio1', 'txc'), ('danychurro', 'password2', 'portfolio2', 'dxc');
-INSERT INTO QuestionsAndAnswers values (100, 'content', 'answer!');
+INSERT INTO QuestionsAndAnswers values (100, 'content', 'answer!'), (105, 'Can I cancel flights for free?', 'It depends on your ticket type.!');

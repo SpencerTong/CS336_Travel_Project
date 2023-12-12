@@ -25,6 +25,9 @@
     	<input type="submit" value="My Flights">
     </form>
     
+   <form method="get" action="questions.jsp">
+    	<input type="submit" value="Questions Page">
+    </form>  
   
     
     <h3>Search Flights</h3>
@@ -781,7 +784,7 @@
     			 
     			 //airline filter
     			 if (airline != null && !airline.equals("Any")) {
-    				 query += " AND airlineID=" +airline;
+    				 query += " AND airlineID='" +airline + "'";
     			 }
     			 
     			 query += " GROUP BY fnumber, fromAirport, toAirport, airlineID, departure, arrival, returnDeparture, returnArrival, travelType, numStops, basicPrice, premiumPrice, bookingFee";

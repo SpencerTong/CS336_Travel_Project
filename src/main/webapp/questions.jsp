@@ -11,7 +11,9 @@
 </head>
 <body>
 <h1>Question and Answer Filter</h1>
-    
+    <form method="GET" action="welcome.jsp">
+	<input type="submit" name="backToHome" value="Back To Home Page">
+</form>
     <form method="GET">
         <label>Filter by Question Content:</label>
         <input type="text" name="questionContent" maxlength="255">
