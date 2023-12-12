@@ -30,7 +30,7 @@
 
 
 	Statement stmt = con.createStatement();
-	String query = "SELECT DISTINCT TicketHasFlight.ticketNumber, FlightAssignedTo.fnumber, departure, arrival " +
+	String query = "SELECT DISTINCT TicketHasFlight.ticketNumber, FlightAssignedTo.fnumber, departure, arrival, cancellationFee " +
 					"FROM TicketReserves " +
 					"INNER JOIN TicketHasFlight " +
 					"ON TicketReserves.ticketNumber = TicketHasFlight.ticketNumber " +
@@ -90,7 +90,7 @@
 
     out.println("<h2>Flight Information</h2>");
     out.println("<table border='1'>");
-    out.println("<tr><th>Ticket Number</th><th>Flight Number</th><th>Departure Date</th><th>Arrival Date</th><th>Other Columns...</th></tr>");
+    out.println("<tr><th>Ticket Number</th><th>Flight Number</th><th>Departure Date</th><th>Arrival Date</th><th>Cancel Flight</th><th>Cancellation Fee</th></tr>");
 
     while (rs.next()) {
         out.println("<tr>");
@@ -104,6 +104,7 @@
         out.println("<input type='submit' name='cancelReservation' value='Cancel Reservation'>");
         out.println("</form>");
         out.println("</td>");
+        out.println("<td>" + rs.getString("cancellationFee") + "</td>");
         // Add other columns as needed
         out.println("</tr>");
     }
