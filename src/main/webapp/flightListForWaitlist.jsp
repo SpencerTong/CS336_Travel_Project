@@ -9,8 +9,17 @@
     <title>Flights and Waitlists</title>
 </head>
 <body>
+<form action="customerRepUI.jsp" method="get">
+	<input type="submit" name="backToUI" value="Back To Customer Rep UI">
+</form>
     <h2>Flights and Their Waitlists</h2>
-    
+    <table border="1">
+        <tr>
+            <th>Flight Number</th>
+            <th>Departure</th>
+            <th>Arrival</th>
+            <th>Check Waitlist</th>
+        </tr>
     <%
         try {
         	ApplicationDB db = new ApplicationDB();	
@@ -22,17 +31,22 @@
             ResultSet rs = stmt.executeQuery(sql);
 
             while(rs.next()) {
-                int fnumber = rs.getInt("fnumber");
+            	int fnumber = rs.getInt("fnumber");
                 String departure = rs.getString("departure");
                 String arrival = rs.getString("arrival");
 
-                out.println("<h3>Flight Number: " + fnumber + ", Departure: " + departure + ", Arrival: " + arrival + "</h3>");
+                out.println("<tr>");
+                out.println("<td>" + fnumber + "</td>");
+                out.println("<td>" + departure + "</td>");
+                out.println("<td>" + arrival + "</td>");
                 
-                // Form for each flight to view waitlist
+                out.println("<td>");
                 out.println("<form method='post'>");
                 out.println("<input type='hidden' name='fnumber' value='" + fnumber + "'/>");
                 out.println("<input type='submit' value='Check Waitlist'/>");
                 out.println("</form>");
+                out.println("</td>");
+                out.println("</tr>");
             }
             rs.close();
             stmt.close();
