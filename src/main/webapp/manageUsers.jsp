@@ -8,7 +8,7 @@
 </head>
 <body>
 
-Here is whhere you can manage users.
+Here is where you can manage users.
 
 </body>
 </html>

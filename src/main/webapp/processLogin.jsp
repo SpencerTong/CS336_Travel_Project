@@ -14,6 +14,7 @@
 	boolean validLogin = false;
 	String inputUsername = "";
     HttpSession ses = request.getSession();
+    String cid = "";
 
 	try {
 
@@ -27,7 +28,7 @@
 
 
 		//Make an insert statement for the Sells table:
-  		String query = "SELECT password FROM user_info WHERE username = ?";
+  		String query = "SELECT password, CID FROM AssociatedAccount WHERE username = ?";
         PreparedStatement pstmt = con.prepareStatement(query);
         pstmt.setString(1, inputUsername);
 
@@ -37,6 +38,7 @@
 			if (inputPassword.equals(result.getString("password"))) {
 				validLogin = true;
 			}
+			cid = result.getString("CID");
 		}
         result.close();
         pstmt.close();
@@ -49,6 +51,7 @@
 	if (validLogin) {
 		ses.setAttribute("username", inputUsername);
 		ses.setAttribute("logInError", null);
+		ses.setAttribute("CID", cid);
 		response.sendRedirect("welcome.jsp");
 	} else {
 		ses.setAttribute("logInError", "invalid login");

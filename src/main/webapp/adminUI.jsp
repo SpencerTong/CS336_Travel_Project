@@ -15,18 +15,11 @@
 		<br>
 			<form method="post" action="manageUsers.jsp">
 			  	<input type="submit" value="Add, Edit information and Delete a customer representative or customer">
-			</form><br><br>
+			</form><br>
 			<form method="post" action="salesReport.jsp">
-				<label for="month">Month:</label><br>
-		 		<input type="text" id="month" name="month"><br>
 			  	<input type="submit" value="Obtain a sales report for a particular month">
-			</form><br><br>
+			</form><br>
 			<form method="post" action="reservationList.jsp">
-				Only input a value for flight number OR customer name, not both.<br>
-				<label for="flightNumber">Flight Number:</label><br>
-		 		<input type="text" id="flightNumber" name="flightNumber"><br>
-				<label for="name">Customer Name:</label><br>
-		 		<input type="text" id="name" name="name"><br>
 			  	<input type="submit" value="Produce a list of reservations by flight number or by customer name">
 			</form><br><br>
 			<form method="post" action="revenueSum.jsp">
