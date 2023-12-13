@@ -11,6 +11,8 @@
 		<title>Admin UI</title>
 	</head>
 
+	<h2>Admin Home Page</h2>
+
 	<body>
 		<br>
 			<form method="post" action="manageUsers.jsp">

@@ -58,7 +58,6 @@
 			        out.println("<td>" + rs.getString("fnumber") + "</td>");
 			        out.println("<td>" + rs.getString("ticketNumber") + "</td>");
 			        out.println("<td>" + rs.getString("CID") + "</td>");
-			        out.println("<td>");
 			        out.println("</tr>");
 			    }
 			    out.println("</table>");
@@ -93,7 +92,6 @@
 			        out.println("<td>" + rs.getString("airlineID") + "</td>");
 			        out.println("<td>" + rs.getString("fnumber") + "</td>");
 			        out.println("<td>" + rs.getString("ticketNumber") + "</td>");
-			        out.println("<td>");
 			        out.println("</tr>");
 			    }
 			    out.println("</table>");

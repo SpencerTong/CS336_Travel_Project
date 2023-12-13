@@ -73,7 +73,6 @@
 			        out.println("<td>" + rs.getString("fnumber") + "</td>");
 			        out.println("<td>" + rs.getString("totalTickets") + "</td>");
 			        out.println("<td>" + "$" + rs.getString("totalRevenue") + "</td>");
-			        out.println("<td>");
 			        out.println("</tr>");
 			    }
 			    out.println("</table>");
@@ -101,7 +100,6 @@
 			        out.println("<td>" + rs.getString("airlineID") + "</td>");
 			        out.println("<td>" + rs.getString("totalTickets") + "</td>");
 			        out.println("<td>" + "$" + rs.getString("totalRevenue") + "</td>");
-			        out.println("<td>");
 			        out.println("</tr>");
 			    }
 			    out.println("</table>");
@@ -130,7 +128,6 @@
 			        out.println("<td>" + rs.getString("firstName") + "</td>");
 			        out.println("<td>" + rs.getString("totalTickets") + "</td>");
 			        out.println("<td>" + "$" + rs.getString("totalRevenue") + "</td>");
-			        out.println("<td>");
 			        out.println("</tr>");
 			    }
 			    out.println("</table>");

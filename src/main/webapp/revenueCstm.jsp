@@ -26,25 +26,25 @@
 			}
 			
 			Statement stmt = con.createStatement();
-			String query = "SELECT tf.airlineID, tf.fnumber, tr.ticketNumber, tr.CID " +
-					"FROM tickethasflight tf " +
-					"JOIN ticketreserves tr ON tf.ticketNumber = tr.ticketNumber " +
-					"WHERE tf.fnumber = " + flightNumber + " " + 
-					"ORDER BY tf.airlineID ";
+			String query = "SELECT c.CID, c.lastName, c.firstName, COUNT(tr.ticketNumber) AS numberOfTickets, SUM(tr.totalFare) AS totalRevenue " +
+					"FROM customer c " +
+					"JOIN ticketreserves tr ON c.CID = tr.CID " +
+					"GROUP BY c.CID " +
+					"ORDER BY totalRevenue DESC LIMIT 1 ";
 			
 		    ResultSet rs = stmt.executeQuery(query);
 		    
-		    out.println("<h2>Here is the reservation list.</h2>");
+		    out.println("<h2>Here is the customer who generated the most total revenue.</h2>");
 		    out.println("<table border='1'>");
-		    out.println("<tr><th>Airline</th><th>Flight Number</th><th>Ticket Number</th><th>Customer ID</th></tr>");
+		    out.println("<tr><th>Customer ID</th><th>Last Name</th><th>First Name</th><th>Tickets Bought</th><th>Total Revenue</th></tr>");
 
 		    while (rs.next()) {
 		        out.println("<tr>");
-		        out.println("<td>" + rs.getString("airlineID") + "</td>");
-		        out.println("<td>" + rs.getString("fnumber") + "</td>");
-		        out.println("<td>" + rs.getString("ticketNumber") + "</td>");
 		        out.println("<td>" + rs.getString("CID") + "</td>");
-		        out.println("<td>");
+		        out.println("<td>" + rs.getString("lastName") + "</td>");
+		        out.println("<td>" + rs.getString("firstName") + "</td>");
+		        out.println("<td>" + rs.getString("numberOfTickets") + "</td>");
+		        out.println("<td>" + "$" + rs.getString("totalRevenue") + "</td>");
 		        out.println("</tr>");
 		    }
 		    out.println("</table>");
@@ -55,8 +55,6 @@
 			e.printStackTrace();
 		}
 	%>
-
-	<h2>Here is the customer that generated the most revenue.</h2>
 
 </body>
 </html>

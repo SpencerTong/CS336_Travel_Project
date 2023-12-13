@@ -77,7 +77,6 @@
         out.println("<td>" + "$" + rs.getString("totalFare") + "</td>");
         out.println("<td>" + "$" + rs.getString("leastExpensive") + "</td>");
         out.println("<td>" + "$" + rs.getString("mostExpensive") + "</td>");
-        out.println("<td>");
         out.println("</tr>");
     }
 
