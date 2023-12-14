@@ -31,7 +31,7 @@
         <input type="submit" value="Manage User Flights">
     </form>
 
-    <form action="questions.jsp" method="get">
+    <form action="customerRepQuestions.jsp" method="get">
         <input type="submit" value="Questions">
     </form>
 
