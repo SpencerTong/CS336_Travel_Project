@@ -56,6 +56,7 @@
         } 
 
     %>
+    </table>
     <%
     	PreparedStatement pstmt = null;
     	String flightNumber = request.getParameter("fnumber");

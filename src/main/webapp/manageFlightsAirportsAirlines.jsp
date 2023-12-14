@@ -3,7 +3,7 @@
 <!--Import some libraries that have classes that we need -->
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*"%>
-<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.io.*,java.util.*,java.sql.*,java.time.LocalDateTime,java.time.format.DateTimeFormatter"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -350,17 +350,24 @@
         
         String departure = departureDate + " " + departureTime + ":00";
         String arrival = arrivalDate + " " + arrivalTime + ":00";
-        String returnDeparture = returnDepartureDate + " " + returnDepartureTime + ":00";
-        String returnArrival = returnArrivalDate + " " + returnArrivalTime + ":00";
+        
+        String returnDeparture = null;
+        String returnArrival = null;
         
 
-		if(!(addFlight == null) && addFlight.equals("edit")){
+		if(!(addFlight == null) && addFlight.equals("add")){
         if (fnumber != null && departure != null && arrival != null) {
             Connection conn = null;
             PreparedStatement pstmt = null;
             try {
                 ApplicationDB db = new ApplicationDB();    
                 Connection con = db.getConnection();
+                
+                if(!returnDepartureDate.isEmpty() && !returnArrivalDate.isEmpty()){
+                	returnDeparture = returnDepartureDate + " " + returnDepartureTime + ":00";
+                	returnArrival = returnArrivalDate + " " + returnArrivalTime + ":00";
+                }
+                
                 
                 if(Integer.parseInt(numStops) > 1)
                 	travelType = "r";

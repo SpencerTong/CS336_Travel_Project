@@ -12,15 +12,15 @@
     <h2>Customer Representative Dashboard</h2>
     
     <form action="customerRepAddFlight.jsp" method="get">
-        <input type="submit" value="Add Flight">
+        <input type="submit" value="Add Flight for Customer">
     </form>
 
     <form action="flights.jsp" method="get">
-        <input type="submit" value="View Flights">
+        <input type="submit" value="View Flights Given Airport">
     </form>
 
     <form action="flightListForWaitlist.jsp" method="get">
-        <input type="submit" value="Flights for Waitlist">
+        <input type="submit" value="Waitlist for Flights">
     </form>
 
     <form action="manageFlightsAirportsAirlines.jsp" method="get">
