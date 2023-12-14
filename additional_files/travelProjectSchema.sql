@@ -18,13 +18,13 @@ CREATE TABLE IF NOT EXISTS Customer(firstName varchar(50), lastName varchar(50),
 
 CREATE TABLE IF NOT EXISTS TicketReserves(ticketNumber integer primary key AUTO_INCREMENT, seat_number integer, bookingFee float, totalFare float, dateAndTimePurchased dateTime, CID varchar(20) not null, cancellationFee integer, FOREIGN KEY(CID) REFERENCES Customer(CID)); 
 
-CREATE TABLE IF NOT EXISTS AssociatedWith(airportID char(3), airlineID char(2), primary key(airportID, airlineID), foreign key (airportID) references Airport(airportID), foreign key (airlineID) references AirlineCompany(airlineID));
+CREATE TABLE IF NOT EXISTS AssociatedWith(airportID char(3), airlineID char(2), primary key(airportID, airlineID), foreign key (airportID) references Airport(airportID) ON UPDATE CASCADE ON DELETE CASCADE, foreign key (airlineID) references AirlineCompany(airlineID) ON UPDATE CASCADE ON DELETE CASCADE);
 
-CREATE TABLE IF NOT EXISTS Aircraft(aircraftID varchar(20), operates varchar(50), seats integer, airlineID char(2), primary key (aircraftID, airlineID), foreign key (airlineID) references AirlineCompany(airlineID));
+CREATE TABLE IF NOT EXISTS Aircraft(aircraftID varchar(20), operates varchar(50), seats integer, airlineID char(2), primary key (aircraftID, airlineID), foreign key (airlineID) references AirlineCompany(airlineID) ON UPDATE CASCADE ON DELETE CASCADE);
 
-CREATE TABLE IF NOT EXISTS FlightAssignedTo(fnumber integer, departure datetime, arrival datetime, returnDeparture datetime, returnArrival datetime, fromAirport char(3), toAirport char(3), numStops integer, travelType char(1), basicPrice float, premiumPrice float, bookingFee float, airlineID char(2), aircraftID varchar(20) not null, waitlist varchar(255), primary key(fnumber, airlineID), foreign key (airlineID) references AirlineCompany(airlineID), foreign key (aircraftID) references Aircraft(aircraftID));
+CREATE TABLE IF NOT EXISTS FlightAssignedTo(fnumber integer, departure datetime, arrival datetime, returnDeparture datetime, returnArrival datetime, fromAirport char(3), toAirport char(3), numStops integer, travelType char(1), basicPrice float, premiumPrice float, bookingFee float, airlineID char(2), aircraftID varchar(20) not null, waitlist varchar(255), primary key(fnumber, airlineID), foreign key (airlineID) references AirlineCompany(airlineID) ON UPDATE CASCADE ON DELETE CASCADE, foreign key (aircraftID) references Aircraft(aircraftID) ON UPDATE CASCADE ON DELETE CASCADE);
 
-CREATE TABLE IF NOT EXISTS TicketHasFlight(ticketNumber integer, fnumber integer, airlineID char(2), primary key(ticketNumber, fnumber, airlineID), foreign key (ticketNumber) references TicketReserves(ticketNumber) ON DELETE CASCADE, foreign key (fnumber, airlineID) references FlightAssignedTo(fnumber, airlineID));
+CREATE TABLE IF NOT EXISTS TicketHasFlight(ticketNumber integer, fnumber integer, airlineID char(2), primary key(ticketNumber, fnumber, airlineID), foreign key (ticketNumber) references TicketReserves(ticketNumber) ON DELETE CASCADE, foreign key (fnumber, airlineID) references FlightAssignedTo(fnumber, airlineID) ON UPDATE CASCADE ON DELETE CASCADE);
 
 CREATE TABLE IF NOT EXISTS AssociatedAccount(username varchar(50), password varchar(50), reservationPortfolio varchar(50), CID varchar(20) not null, primary key (username), foreign key (CID) references Customer(CID));
 
