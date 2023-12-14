@@ -64,4 +64,8 @@ public class ApplicationDB {
 	
 	
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> admin
