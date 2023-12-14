@@ -10,9 +10,10 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<title>Admin UI</title>
 	</head>
-
+    <form method="get" action="logIn.jsp">
+    	<input type="submit" value="Log Out">
+    </form>
 	<h2>Admin Home Page</h2>
-
 	<body>
 		<br>
 			<form method="post" action="manageUsers.jsp">

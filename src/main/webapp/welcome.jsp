@@ -175,7 +175,7 @@
     		<input type="date" id="returnFlightDate" name="returnFlightDate">
     		
     		<label for="returnFlightDateFlexibility">Flexibility: </label>
-    		<select id="returnFlightDateFlexibility" name="returnFlightDateFlexibility"">
+    		<select id="returnFlightDateFlexibility" name="returnFlightDateFlexibility">
     			<option value="0">0</option>
  				<option value="1">1</option>
  				<option value="2">2</option>

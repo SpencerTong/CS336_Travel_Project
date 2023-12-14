@@ -9,6 +9,9 @@
     <title>Customer Representative Dashboard</title>
 </head>
 <body>
+    <form method="get" action="logIn.jsp">
+    	<input type="submit" value="Log Out">
+    </form>
     <h2>Customer Representative Dashboard</h2>
     
     <form action="customerRepAddFlight.jsp" method="get">

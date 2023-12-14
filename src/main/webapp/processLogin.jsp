@@ -52,7 +52,13 @@
 		ses.setAttribute("username", inputUsername);
 		ses.setAttribute("logInError", null);
 		ses.setAttribute("CID", cid);
-		response.sendRedirect("welcome.jsp");
+		if (cid.equals("admin")){
+			response.sendRedirect("adminUI.jsp");
+		} else if (cid.equals("customerRep")){		
+			response.sendRedirect("customerRepUI.jsp");
+		} else {
+			response.sendRedirect("welcome.jsp");
+		}
 	} else {
 		ses.setAttribute("logInError", "invalid login");
 		response.sendRedirect("logIn.jsp");
